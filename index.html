@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galería — Control por Voz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.4.0/dist/speech-commands.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Overlay de carga -->
+<div id="loadingOverlay">
+  <div class="loader-ring"></div>
+  <p>Cargando modelo</p>
+  <small>Teachable Machine · Audio</small>
+</div>
+
+<div class="container">
+
+  <!-- ENCABEZADO -->
+  <header>
+    <div class="museum-tag">Galería Interactiva</div>
+    <div class="title"><em>Galería</em> de Voz</div>
+    <div class="subtitle">Filtros de imagen controlados por comando de voz</div>
+    <div class="header-rule">
+      <span class="header-ornament">✦</span>
+    </div>
+  </header>
+
+  <div class="main-grid">
+
+    <!-- COLUMNA IZQUIERDA: Canvas + Probabilidades -->
+    <div>
+      <div class="canvas-panel">
+        <div class="panel-label">
+          <span class="dot"></span>
+          Sala de exhibición
+        </div>
+        <div class="canvas-wrapper" id="canvasWrapper">
+          <div class="canvas-placeholder" id="placeholder">
+            <div class="upload-zone" id="uploadZone">
+              <div class="upload-icon">🖼️</div>
+              <p>Sube una obra para aplicar<br>los filtros de voz</p>
+              <p><span>Seleccionar archivo</span> o arrastra aquí</p>
+            </div>
+            <p>También puedes usar el micrófono sin imagen</p>
+          </div>
+          <canvas id="mainCanvas" style="display:none; max-width:100%; max-height:420px;"></canvas>
+          <div class="filter-badge" id="filterBadge" style="display:none">original</div>
+        </div>
+        <div class="nav-info" id="navInfo" style="display:none">
+          <span id="navCounter">Obra 1 / 1</span>
+        </div>
+      </div>
+
+      <input type="file" id="fileInput" accept="image/*" multiple>
+
+      <!-- Probabilidades -->
+      <div class="card below-canvas">
+        <div class="probs-card">
+          <div class="section-title">Probabilidades en tiempo real</div>
+          <div id="probsContainer" style="margin-top:0.8rem">
+            <p style="font-size:0.65rem; color:var(--muted); letter-spacing:0.1em;">
+              Activa el micrófono para ver probabilidades
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: Controles -->
+    <div class="controls-panel">
+
+      <!-- Micrófono -->
+      <div class="card">
+        <div class="mic-section">
+          <button class="mic-btn" id="micBtn" onclick="toggleListening()">
+            <div class="mic-ring"></div>
+            🎤
+          </button>
+          <div class="mic-status" id="micStatus">Pulse para activar el micrófono</div>
+        </div>
+        <div class="command-display">
+          <div class="command-label">Comando detectado</div>
+          <div class="command-value" id="commandValue">—</div>
+          <div class="confidence-bar">
+            <div class="confidence-fill" id="confidenceFill"></div>
+          </div>
+          <div class="confidence-text" id="confidenceText">Confianza: —</div>
+        </div>
+      </div>
+
+      <!-- Comandos disponibles -->
+      <div class="card">
+        <div class="commands-card">
+          <div class="section-title">Comandos disponibles</div>
+          <div class="commands-grid">
+            <div class="cmd-chip" data-cmd="soplo">
+              <span class="cmd-icon">💨</span>
+              <span class="cmd-name">soplo</span>
+            </div>
+            <div class="cmd-chip" data-cmd="siguiente/next">
+              <span class="cmd-icon">▶️</span>
+              <span class="cmd-name">siguiente</span>
+            </div>
+            <div class="cmd-chip" data-cmd="anterior">
+              <span class="cmd-icon">◀️</span>
+              <span class="cmd-name">anterior</span>
+            </div>
+            <div class="cmd-chip" data-cmd="abrir">
+              <span class="cmd-icon">📂</span>
+              <span class="cmd-name">abrir</span>
+            </div>
+            <div class="cmd-chip" data-cmd="cerrar">
+              <span class="cmd-icon">✕</span>
+              <span class="cmd-name">cerrar</span>
+            </div>
+            <div class="cmd-chip" data-cmd="guardar">
+              <span class="cmd-icon">💾</span>
+              <span class="cmd-name">guardar</span>
+            </div>
+            <div class="cmd-chip" data-cmd="pixel">
+              <span class="cmd-icon">▪</span>
+              <span class="cmd-name">pixel</span>
+            </div>
+            <div class="cmd-chip" data-cmd="oleo">
+              <span class="cmd-icon">🎨</span>
+              <span class="cmd-name">óleo</span>
+            </div>
+            <div class="cmd-chip" data-cmd="blanco y negro">
+              <span class="cmd-icon">◑</span>
+              <span class="cmd-name">blanco y negro</span>
+            </div>
+            <div class="cmd-chip" data-cmd="original">
+              <span class="cmd-icon">✦</span>
+              <span class="cmd-name">original</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historial -->
+      <div class="card">
+        <div class="history-card">
+          <div class="section-title">Registro de comandos</div>
+          <div class="history-list" id="historyList">
+            <div class="history-item">
+              <span class="history-time">—</span>
+              <span class="history-cmd">Sin comandos aún</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

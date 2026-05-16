@@ -1,0 +1,703 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap');
+
+:root {
+  --bg: #0e0e0b;
+  --surface: #16160f;
+  --surface2: #1e1e14;
+  --surface3: #252518;
+  --gold: #c9a84c;
+  --gold-light: #e8cb7a;
+  --gold-dim: rgba(201,168,76,0.15);
+  --cream: #f0ead8;
+  --muted: #7a7660;
+  --muted2: #4a4838;
+  --border: rgba(201,168,76,0.2);
+  --border-strong: rgba(201,168,76,0.4);
+  --success: #8ab87a;
+  --danger: #c97a7a;
+  --text: #ddd9c8;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Fondo con textura de mármol sutil */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.03) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.02) 0%, transparent 50%),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 80px,
+      rgba(201,168,76,0.012) 80px,
+      rgba(201,168,76,0.012) 81px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Franja superior decorativa */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+  z-index: 200;
+}
+
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── HEADER ─────────────────────────────── */
+header {
+  text-align: center;
+  padding: 4rem 0 3rem;
+  position: relative;
+}
+
+.museum-tag {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.museum-tag::before,
+.museum-tag::after {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.5;
+}
+
+.title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--cream);
+  line-height: 1;
+  margin-bottom: 0.6rem;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.subtitle {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.8rem;
+}
+
+.header-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.header-rule::before,
+.header-rule::after {
+  content: '';
+  flex: 1;
+  max-width: 200px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong));
+}
+
+.header-rule::after {
+  background: linear-gradient(90deg, var(--border-strong), transparent);
+}
+
+.header-ornament {
+  color: var(--gold);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+}
+
+/* ── GRID ─────────────────────────────── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2rem;
+  margin-top: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .main-grid { grid-template-columns: 1fr; }
+}
+
+/* ── CANVAS PANEL ─────────────────────── */
+.canvas-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+/* Marco decorativo esquinas */
+.canvas-panel::before,
+.canvas-panel::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--gold);
+  border-style: solid;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.canvas-panel::before {
+  top: -1px; left: -1px;
+  border-width: 2px 0 0 2px;
+}
+
+.canvas-panel::after {
+  bottom: -1px; right: -1px;
+  border-width: 0 2px 2px 0;
+}
+
+.panel-label {
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.9rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.panel-label .dot {
+  width: 5px; height: 5px;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
+.canvas-wrapper {
+  position: relative;
+  aspect-ratio: 1;
+  background: #080806;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#mainCanvas {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
+
+/* Zona de carga */
+.canvas-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 2.5rem;
+  height: 100%;
+  min-height: 300px;
+}
+
+.upload-zone {
+  border: 1px solid var(--border);
+  padding: 2.5rem 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  position: relative;
+}
+
+/* Esquinas upload */
+.upload-zone::before, .upload-zone::after {
+  content: '';
+  position: absolute;
+  width: 12px; height: 12px;
+  border-color: var(--gold);
+  border-style: solid;
+  opacity: 0.4;
+  transition: opacity 0.3s;
+}
+.upload-zone::before { top: 0; left: 0; border-width: 1px 0 0 1px; }
+.upload-zone::after  { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+
+.upload-zone:hover {
+  border-color: var(--border-strong);
+  background: var(--gold-dim);
+}
+
+.upload-zone:hover::before,
+.upload-zone:hover::after { opacity: 1; }
+
+.upload-icon {
+  font-size: 1.8rem;
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.upload-zone p {
+  font-size: 0.7rem;
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+}
+
+.upload-zone span { color: var(--gold-light); }
+
+.canvas-placeholder > p:last-child {
+  font-size: 0.6rem;
+  color: var(--muted2);
+  letter-spacing: 0.1em;
+}
+
+#fileInput { display: none; }
+
+.filter-badge {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: rgba(8,8,6,0.85);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.6rem;
+  color: var(--gold-light);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+.nav-info {
+  text-align: center;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  padding: 0.7rem;
+  border-top: 1px solid var(--border);
+  text-transform: uppercase;
+}
+
+/* ── CARDS ─────────────────────────────── */
+.controls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+/* Esquinas decorativas en cards */
+.card::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px;
+  width: 10px; height: 10px;
+  border-top: 1px solid var(--gold);
+  border-left: 1px solid var(--gold);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ── SECCIÓN MIC ─────────────────────── */
+.mic-section {
+  padding: 2rem 1.5rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.mic-btn {
+  width: 76px;
+  height: 76px;
+  border-radius: 0;
+  border: 1px solid var(--border-strong);
+  background: var(--surface2);
+  color: var(--gold-light);
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(0deg);
+}
+
+/* Marco de micrófono */
+.mic-btn::before, .mic-btn::after {
+  content: '';
+  position: absolute;
+  width: 8px; height: 8px;
+  border-color: var(--gold);
+  border-style: solid;
+  transition: all 0.3s;
+}
+
+.mic-btn::before { top: -4px; left: -4px; border-width: 1px 0 0 1px; }
+.mic-btn::after  { bottom: -4px; right: -4px; border-width: 0 1px 1px 0; }
+
+.mic-btn:hover {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.mic-btn.active {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+  box-shadow: 0 0 40px rgba(201,168,76,0.2), inset 0 0 20px rgba(201,168,76,0.05);
+  animation: breathe 2.5s ease-in-out infinite;
+}
+
+.mic-btn.loading {
+  border-color: var(--muted);
+  color: var(--muted);
+}
+
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 20px rgba(201,168,76,0.15), inset 0 0 10px rgba(201,168,76,0.05); }
+  50%       { box-shadow: 0 0 50px rgba(201,168,76,0.3), inset 0 0 25px rgba(201,168,76,0.08); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Aro animado */
+.mic-ring {
+  position: absolute;
+  inset: -12px;
+  border: 1px solid var(--gold);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.mic-btn.active .mic-ring {
+  opacity: 0.25;
+  animation: expand-ring 2.5s ease-out infinite;
+}
+
+@keyframes expand-ring {
+  0%   { transform: scale(1); opacity: 0.25; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.mic-status {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+}
+
+.mic-status.active  { color: var(--gold-light); }
+.mic-status.loading { color: var(--muted); }
+
+/* ── COMANDO DETECTADO ─────────────────── */
+.command-display {
+  padding: 0 1.5rem 1.5rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.2rem;
+}
+
+.command-label {
+  font-size: 0.55rem;
+  color: var(--muted);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.command-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold-light);
+  min-height: 2.4rem;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+.command-value.new {
+  animation: reveal 0.35s ease;
+}
+
+@keyframes reveal {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.confidence-bar {
+  height: 1px;
+  background: var(--border);
+  margin-top: 0.8rem;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+.confidence-text {
+  font-size: 0.58rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+  letter-spacing: 0.1em;
+}
+
+/* ── CHIPS DE COMANDOS ─────────────────── */
+.commands-card {
+  padding: 1.2rem 1.5rem;
+}
+
+.commands-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.4rem;
+  margin-top: 1rem;
+}
+
+.cmd-chip {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  font-size: 0.65rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  cursor: default;
+  letter-spacing: 0.05em;
+}
+
+.cmd-chip.active {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+  color: var(--cream);
+}
+
+.cmd-chip.active .cmd-icon { filter: none; }
+
+.cmd-icon {
+  font-size: 0.85rem;
+  filter: grayscale(0.6);
+  transition: filter 0.3s;
+}
+
+.cmd-name {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 300;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ── HISTORIAL ─────────────────────────── */
+.history-card {
+  padding: 1.2rem 1.5rem;
+}
+
+.history-list {
+  max-height: 130px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.65rem;
+  color: var(--muted);
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(201,168,76,0.05);
+}
+
+.history-time {
+  color: var(--muted2);
+  font-size: 0.58rem;
+  letter-spacing: 0.05em;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+.history-cmd {
+  color: var(--text);
+  letter-spacing: 0.1em;
+  font-style: italic;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+}
+
+/* ── PROBABILIDADES ─────────────────────── */
+.probs-card {
+  padding: 1.2rem 1.5rem;
+}
+
+.prob-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.6rem;
+}
+
+.prob-name {
+  width: 95px;
+  color: var(--muted);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+
+.prob-bar {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.prob-fill {
+  height: 100%;
+  transition: width 0.2s ease;
+  background: var(--muted2);
+}
+
+.prob-fill.top {
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+}
+
+.prob-val {
+  width: 30px;
+  text-align: right;
+  color: var(--muted2);
+  font-size: 0.55rem;
+  letter-spacing: 0.05em;
+}
+
+/* ── SECTION TITLE ─────────────────────── */
+.section-title {
+  font-size: 0.55rem;
+  color: var(--muted);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── LOADING OVERLAY ─────────────────────── */
+#loadingOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,8,6,0.96);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  gap: 1.5rem;
+  backdrop-filter: blur(6px);
+}
+
+.loader-ring {
+  width: 50px;
+  height: 50px;
+  border: 1px solid var(--border);
+  border-top-color: var(--gold);
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+#loadingOverlay p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold-light);
+  letter-spacing: 0.15em;
+}
+
+#loadingOverlay small {
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ── SCROLLBAR ─────────────────────────── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); }
+
+/* ── PROBS CARD bajo canvas ─────────────── */
+.below-canvas {
+  margin-top: 1.2rem;
+}
